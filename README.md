@@ -1,5 +1,7 @@
 # System Monitor & Log Analyzer
 
+![App Screenshot](screenshots/dashboard.png)
+
 This app monitors CPU and RAM usage in real time and automatically logs an alert whenever usage crosses 80%. It polls system metrics every 2 seconds using `psutil`, displays them live through a PySide6 GUI, and stores triggered alerts in a local SQLite database. I built it to strengthen my skills in GUI development, real-time data polling, and database integration in Python.
 
 ## Features
@@ -20,6 +22,7 @@ This app monitors CPU and RAM usage in real time and automatically logs an alert
 1. Clone this repository:
 
 git clone https://github.com/YOUR-USERNAME/SystemMonitor.git
+
 cd SystemMonitor
 
 2. Create and activate a virtual environment:
