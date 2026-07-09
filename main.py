@@ -10,6 +10,7 @@ class SystemMonitorApp(QMainWindow):
         super().__init__()
         self.setWindowTitle("Industrial System Health Monitor")
         self.resize(450, 400)
+        self.apply_dark_theme()
 
         # Initialize Database
         database.init_db()
@@ -45,15 +46,51 @@ class SystemMonitorApp(QMainWindow):
         self.timer.timeout.connect(self.update_metrics)
         self.timer.start(2000)  # Updates every 2 seconds
 
+    def apply_dark_theme(self):
+        self.setStyleSheet("""
+            QMainWindow {
+                background-color: #1e1e2e;
+            }
+            QLabel {
+                color: #cdd6f4;
+                font-size: 13px;
+                font-weight: 500;
+                padding: 4px 0px;
+            }
+            QProgressBar {
+                background-color: #313244;
+                border: none;
+                border-radius: 6px;
+                text-align: center;
+                color: #cdd6f4;
+                height: 22px;
+            }
+            QProgressBar::chunk {
+                background-color: #89b4fa;
+                border-radius: 6px;
+            }
+            QTextEdit {
+                background-color: #181825;
+                color: #f38ba8;
+                border: 1px solid #313244;
+                border-radius: 6px;
+                font-family: Consolas, monospace;
+                font-size: 12px;
+                padding: 6px;
+            }
+        """)
+
     def update_metrics(self):
         cpu = psutil.cpu_percent()
         ram = psutil.virtual_memory().percent
 
         self.cpu_label.setText(f"CPU Usage: {cpu}%")
         self.cpu_bar.setValue(int(cpu))
+        self.set_bar_color(self.cpu_bar, cpu)
 
         self.ram_label.setText(f"RAM Usage: {ram}%")
         self.ram_bar.setValue(int(ram))
+        self.set_bar_color(self.ram_bar, ram)
 
         if cpu > 80.0:
             database.log_alert("CPU", cpu)
@@ -62,6 +99,27 @@ class SystemMonitorApp(QMainWindow):
             database.log_alert("RAM", ram)
             self.log_view.append(f"⚠️ [ALERT] Critical memory consumption: {ram}%")
 
+    def set_bar_color(self, bar, value):
+        if value < 60:
+            color = "#a6e3a1"  # green
+        elif value < 80:
+            color = "#f9e2af"  # yellow
+        else:
+            color = "#f38ba8"  # red
+        bar.setStyleSheet(f"""
+            QProgressBar {{
+                background-color: #313244;
+                border: none;
+                border-radius: 6px;
+                text-align: center;
+                color: #1e1e2e;
+                height: 22px;
+            }}
+            QProgressBar::chunk {{
+                background-color: {color};
+                border-radius: 6px;
+            }}
+        """)
 if __name__ == "__main__":
     app = QApplication(sys.argv)
     window = SystemMonitorApp()
