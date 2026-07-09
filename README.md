@@ -50,4 +50,5 @@ This separation keeps the storage logic independent of the UI, making each piece
 - [x] Add dark theme styling
 - [x] Add a historical alerts view with a filterable table
 - [x] Add filtering and clear controls to alert history
+![App Screenshot](screenshots/alert_history_tab.png)
 - [ ] Package as a standalone executable
