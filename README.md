@@ -45,6 +45,15 @@ The project separates concerns between two files:
 
 This separation keeps the storage logic independent of the UI, making each piece easier to test and extend on its own.
 
+## Building a Standalone Executable
+
+To package this app into a single `.exe` that runs without Python installed:
+
+    pip install pyinstaller
+    pyinstaller --onefile --windowed --name SystemMonitor main.py
+
+The executable will be created at `dist/SystemMonitor.exe`.
+
 ## Roadmap
 
 - [x] Add dark theme styling
@@ -52,3 +61,4 @@ This separation keeps the storage logic independent of the UI, making each piece
 - [x] Add filtering and clear controls to alert history
 ![App Screenshot](screenshots/alert_history_tab.png)
 - [ ] Package as a standalone executable
+
