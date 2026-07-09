@@ -26,3 +26,11 @@ def log_alert(metric_type, value, status="WARNING"):
     )
     conn.commit()
     conn.close()
+
+def get_all_alerts():
+    conn = sqlite3.connect("system_logs.db")
+    cursor = conn.cursor()
+    cursor.execute("SELECT id, timestamp, metric_type, value, status FROM alerts ORDER BY id DESC")
+    rows = cursor.fetchall()
+    conn.close()
+    return rows

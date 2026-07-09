@@ -47,6 +47,6 @@ This separation keeps the storage logic independent of the UI, making each piece
 
 ## Roadmap
 
-- [ ] Add a historical alerts view with a filterable table
+- [x] Add a historical alerts view with a filterable table
 - [x] Add dark theme styling
 - [ ] Package as a standalone executable
