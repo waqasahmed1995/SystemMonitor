@@ -34,3 +34,10 @@ def get_all_alerts():
     rows = cursor.fetchall()
     conn.close()
     return rows
+
+def clear_all_alerts():
+    conn = sqlite3.connect("system_logs.db")
+    cursor = conn.cursor()
+    cursor.execute("DELETE FROM alerts")
+    conn.commit()
+    conn.close()

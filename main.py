@@ -2,7 +2,8 @@ import sys
 import psutil
 from PySide6.QtWidgets import (QApplication, QMainWindow, QWidget, QVBoxLayout,
                              QHBoxLayout, QLabel, QProgressBar, QPushButton, QTextEdit,
-                             QTabWidget, QTableWidget, QTableWidgetItem, QHeaderView)
+                             QTabWidget, QTableWidget, QTableWidgetItem, QHeaderView,
+                             QComboBox, QMessageBox)
 from PySide6.QtCore import QTimer, Qt
 import database
 
@@ -59,9 +60,23 @@ class SystemMonitorApp(QMainWindow):
     def build_history_tab(self):
         layout = QVBoxLayout(self.history_tab)
 
+        controls_layout = QHBoxLayout()
+
+        self.filter_dropdown = QComboBox()
+        self.filter_dropdown.addItems(["All", "CPU", "RAM"])
+        self.filter_dropdown.currentTextChanged.connect(self.load_history)
+        controls_layout.addWidget(QLabel("Filter:"))
+        controls_layout.addWidget(self.filter_dropdown)
+
         self.refresh_button = QPushButton("Refresh History")
         self.refresh_button.clicked.connect(self.load_history)
-        layout.addWidget(self.refresh_button)
+        controls_layout.addWidget(self.refresh_button)
+
+        self.clear_button = QPushButton("Clear History")
+        self.clear_button.clicked.connect(self.clear_history)
+        controls_layout.addWidget(self.clear_button)
+
+        layout.addLayout(controls_layout)
 
         self.history_table = QTableWidget()
         self.history_table.setColumnCount(5)
@@ -74,11 +89,26 @@ class SystemMonitorApp(QMainWindow):
 
     def load_history(self):
         rows = database.get_all_alerts()
+
+        selected_filter = self.filter_dropdown.currentText()
+        if selected_filter != "All":
+            rows = [row for row in rows if row[2] == selected_filter]
+
         self.history_table.setRowCount(len(rows))
         for row_index, row_data in enumerate(rows):
             for col_index, value in enumerate(row_data):
                 item = QTableWidgetItem(str(value))
                 self.history_table.setItem(row_index, col_index, item)
+
+    def clear_history(self):
+        confirm = QMessageBox.question(
+            self, "Confirm Clear",
+            "This will permanently delete all alert history. Continue?",
+            QMessageBox.Yes | QMessageBox.No
+        )
+        if confirm == QMessageBox.Yes:
+            database.clear_all_alerts()
+            self.load_history()
 
     def on_tab_changed(self, index):
         if self.tabs.tabText(index) == "Alert History":
