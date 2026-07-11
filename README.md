@@ -60,5 +60,5 @@ The executable will be created at `dist/SystemMonitor.exe`.
 - [x] Add a historical alerts view with a filterable table
 - [x] Add filtering and clear controls to alert history
 ![App Screenshot](screenshots/alert_history_tab.png)
-- [ ] Package as a standalone executable
+- [x] Package as a standalone executable
 
